@@ -113,8 +113,56 @@
             card.dataset.currentImage = '0';
         }
     });
+
+        // Переключение изображений в галерее
+function changeImage(productIndex, direction) {
+    const card = document.querySelector(`[data-product-id="${productsData[productIndex].id}"]`);
+    const currentImage = parseInt(card.dataset.currentImage);
+    const images = productsData[productIndex].images;
     
-    updateCartCount();
+    let newIndex = currentImage + direction;
+    
+    // Зацикливание галереи
+    if (newIndex < 0) newIndex = images.length - 1;
+    if (newIndex >= images.length) newIndex = 0;
+    
+    // Обновление изображения
+    const imgElement = document.getElementById(`img-${productIndex}`);
+    imgElement.style.opacity = '0';
+    
+    setTimeout(() => {
+        imgElement.src = images[newIndex];
+        imgElement.style.opacity = '1';
+    }, 150);
+    
+    // Обновление индекса
+    card.dataset.currentImage = newIndex;
+    
+    // Обновление точек
+    updateDots(productIndex, newIndex);
+}
+
+// Переход к конкретному изображению по точке
+function goToImage(productIndex, imageIndex) {
+    const card = document.querySelector(`[data-product-id="${productsData[productIndex].id}"]`);
+    const currentImage = parseInt(card.dataset.currentImage);
+    
+    if (currentImage !== imageIndex) {
+        changeImage(productIndex, imageIndex > currentImage ? 1 : -1);
+    }
+}
+
+// Обновление индикаторов (точек)
+function updateDots(productIndex, activeIndex) {
+    const dotsContainer = document.getElementById(`dots-${productIndex}`);
+    const dots = dotsContainer.querySelectorAll('.dot');
+    
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === activeIndex);
+    });
+}
+        
+        updateCartCount();
 }
 
     // === ДОБАВЛЕНИЕ В КОРЗИНУ ===
