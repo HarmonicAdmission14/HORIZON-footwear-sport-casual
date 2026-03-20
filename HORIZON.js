@@ -75,25 +75,47 @@
         }
     }
 
-    // === ОТРИСОВКА ТОВАРОВ ===
     function renderProducts() {
-        if (!productContainer) return; // Защита от ошибки, если элемента нет
-        
-        productContainer.innerHTML = productsData.map(product => `
-            <div class="product-card">
-                <img src="${product.image}" alt="${product.title}" class="product-img">
-                <div class="product-info">
-                    <h3 class="product-title">${product.title}</h3>
-                    <div class="product-price">${product.price}</div>
-                    <!-- Передаём ID товара в функцию -->
-                    <button class="add-to-cart" onclick="addToCart(${product.id}, this)">В корзину</button>
+    if (!productContainer) return;
+    
+    productContainer.innerHTML = productsData.map((product, index) => `
+        <div class="product-card" data-product-id="${product.id}">
+            <!-- Галерея изображений -->
+            <div class="product-gallery">
+                <button class="gallery-btn prev" onclick="changeImage(${index}, -1)">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <img src="${product.images[0]}" alt="${product.title}" class="product-img" id="img-${index}">
+                <button class="gallery-btn next" onclick="changeImage(${index}, 1)">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <div class="gallery-dots" id="dots-${index}">
+                    ${product.images.map((_, imgIndex) => 
+                        `<span class="dot ${imgIndex === 0 ? 'active' : ''}" onclick="goToImage(${index}, ${imgIndex})"></span>`
+                    ).join('')}
                 </div>
             </div>
-        `).join('');
-        
-        // Обновляем счётчик после отрисовки
-        updateCartCount();
-    }
+            
+            <div class="product-info">
+                <h3 class="product-title">${product.title}</h3>
+                <div class="product-price">${product.price}</div>
+                <button class="add-to-cart" onclick="addToCart(${product.id}, this)">
+                    <i class="fa-solid fa-cart-plus"></i> В корзину
+                </button>
+            </div>
+        </div>
+    `).join('');
+    
+    // Сохраняем текущий индекс для каждой карточки
+    productsData.forEach((product, index) => {
+        const card = document.querySelector(`[data-product-id="${product.id}"]`);
+        if (card) {
+            card.dataset.currentImage = '0';
+        }
+    });
+    
+    updateCartCount();
+}
 
     // === ДОБАВЛЕНИЕ В КОРЗИНУ ===
     function addToCart(productId, btnElement) {
