@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина - HORIZON</title>
+    <link rel="stylesheet" href="Horizon.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Дополнительные стили для корзины */
+        .cart-page {
+            min-height: 80vh;
+            padding: 40px 0;
+        }
+
+        .cart-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .back-link {
+            color: #666;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #00C985;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .cart-empty i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            align-items: center;
+        }
+
+        .cart-item-img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 500;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .cart-item-price {
+            color: #00C985;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+            padding: 5px 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .qty-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #333;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .qty-value {
+            font-weight: 500;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .remove-btn:hover {
+            background: #ffe5e5;
+        }
+
+        .cart-footer {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .cart-total {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .cart-total span {
+            color: #00C985;
+            font-size: 28px;
+        }
+
+        .checkout-btn {
+            background: #00C985;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkout-btn:hover {
+            background: #00b377;
+        }
+
+        .checkout-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .cart-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .cart-item-controls {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .cart-footer {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Шапка (такая же, как на главной) -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fa-solid fa-shield-halved"></i> HORIZON
+            </div>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Поиск товаров...">
+                <button><i class="fa-solid fa-search"></i></button>
+            </div>
+
+            <nav class="nav-links">
+                <a href="index.html">Главная</a>
+                <a href="#">Бренды</a>
+                <a href="#">Скидки</a>
+            </nav>
+
+            <div class="user-actions">
+                <button class="cart-btn">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-count">0</span>
+                </button>
+                <a href="Вход.html"><button class="login-btn">Войти</button></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Страница корзины -->
+    <section class="cart-page">
+        <div class="container">
+            <div class="cart-container">
+                <div class="cart-header">
+                    <h1 class="cart-title">🛒 Ваша корзина</h1>
+                    <a href="index.html" class="back-link">
+                        <i class="fa-solid fa-arrow-left"></i> Вернуться к покупкам
+                    </a>
+                </div>
+
+                <div id="cart-content">
+                    <!-- Сюда JavaScript добавит товары -->
+                </div>
+
+                <div class="cart-footer" id="cart-footer" style="display: none;">
+                    <div class="cart-total">
+                        Итого: <span id="total-price">0 ₽</span>
+                    </div>
+                    <button class="checkout-btn" onclick="checkout()">
+                        <i class="fa-solid fa-check"></i> Оформить заказ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 HORIZON. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        // === ЛОГИКА КОРЗИНЫ ===
+
+        // Загружаем корзину из localStorage
+        let cart = JSON.parse(localStorage.getItem('horizon_cart')) || [];
+
+        const cartContent = document.getElementById('cart-content');
+        const cartFooter = document.getElementById('cart-footer');
+        const totalPriceEl = document.getElementById('total-price');
+        const cartCountEl = document.querySelector('.cart-count');
+
+        // Обновление счетчика в шапке
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (cartCountEl) {
+                cartCountEl.textContent = count;
+            }
+        }
+
+        // Форматирование цены
+        function formatPrice(priceStr) {
+            return parseInt(priceStr.replace(/\D/g, ''));
+        }
+
+        // Отрисовка корзины
+        function renderCart() {
+            updateCartCount();
+
+            if (cart.length === 0) {
+                cartContent.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <p>Ваша корзина пуста</p>
+                        <a href="index.html" class="btn-primary" style="margin-top: 20px; display: inline-block;">
+                            Перейти к покупкам
+                        </a>
+                    </div>
+                `;
+                cartFooter.style.display = 'none';
+                return;
+            }
+
+            cartFooter.style.display = 'flex';
+
+            let total = 0;
+
+            cartContent.innerHTML = `
+                <div class="cart-items">
+                    ${cart.map(item => {
+                        const itemTotal = formatPrice(item.price) * item.quantity;
+                        total += itemTotal;
+                        return `
+                            <div class="cart-item" data-id="${item.id}">
+                                <img src="${item.image}" alt="${item.title}" class="cart-item-img">
+                                <div class="cart-item-info">
+                                    <div class="cart-item-title">${item.title}</div>
+                                    <div class="cart-item-price">${item.price}</div>
+                                </div>
+                                <div class="cart-item-controls">
+                                    <div class="qty-control">
+                                        <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+                                        <span class="qty-value">${item.quantity}</span>
+                                        <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                                    </div>
+                                    <button class="remove-btn" onclick="removeItem(${item.id})" title="Удалить">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            totalPriceEl.textContent = total.toLocaleString('ru-RU') + ' ₽';
+        }
+
+        // Изменение количества
+        function changeQty(id, change) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeItem(id);
+                } else {
+                    saveCart();
+                    renderCart();
+                }
+            }
+        }
+
+        // Удаление товара
+        function removeItem(id) {
+            cart = cart.filter(i => i.id !== id);
+            saveCart();
+            renderCart();
+        }
+
+        // Сохранение в localStorage
+        function saveCart() {
+            localStorage.setItem('horizon_cart', JSON.stringify(cart));
+        }
+
+        // Оформление заказа
+        function checkout() {
+            if (cart.length === 0) return;
+            
+            const total = cart.reduce((sum, item) => {
+                return sum + formatPrice(item.price) * item.quantity;
+            }, 0);
+
+            alert(`Заказ оформлен!\nСумма: ${total.toLocaleString('ru-RU')} ₽\n\nМенеджер свяжется с вами для подтверждения.`);
+            
+            // Очистка корзины после заказа
+            cart = [];
+            saveCart();
+            renderCart();
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCart();
+        });
+    </script>
+</body>
+</html>
