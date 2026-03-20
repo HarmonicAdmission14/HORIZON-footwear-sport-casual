@@ -97,9 +97,49 @@ function renderProducts() {
 }
 
 // Функция добавления в корзину
-function addToCart() {
-    cartCount++;
-    cartCountElement.textContent = cartCount;
+// === ЗАМЕНИТЕ СТАРУЮ ФУНКЦИЮ addToCart НА ЭТУ ===
+
+function addToCart(productId) {
+    // Находим товар по ID
+    const product = productsData.find(p => p.id === productId);
+    if (!product) return;
+
+    // Загружаем текущую корзину
+    let cart = JSON.parse(localStorage.getItem('horizon_cart')) || [];
+
+    // Проверяем, есть ли товар уже в корзине
+    const existingItem = cart.find(item => item.id === productId);
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        // Добавляем новый товар
+        cart.push({
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            image: product.image,
+            quantity: 1
+        });
+    }
+
+    // Сохраняем в localStorage
+    localStorage.setItem('horizon_cart', JSON.stringify(cart));
+
+    // Обновляем счётчик
+    updateCartCount();
+    
+    // Анимация кнопки (ваша старая логика)
+    const btn = event.target;
+    btn.textContent = "Добавлено!";
+    btn.style.background = "#00C985";
+    btn.style.color = "#fff";
+    setTimeout(() => {
+        btn.textContent = "В корзину";
+        btn.style.background = "#f0f0f0";
+        btn.style.color = "#333";
+    }, 1000);
+}
     
     // Анимация иконки корзины
     const cartBtn = document.querySelector('.cart-btn');
@@ -107,6 +147,15 @@ function addToCart() {
     setTimeout(() => {
         cartBtn.style.transform = "scale(1)";
     }, 200);
+}
+// Функция обновления счётчика корзины
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('horizon_cart')) || [];
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const cartCountElement = document.querySelector('.cart-count');
+    if (cartCountElement) {
+        cartCountElement.textContent = count;
+    }
 }
 
 // Инициализация
