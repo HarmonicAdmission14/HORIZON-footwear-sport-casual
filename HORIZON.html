@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HORIZON - Магазин кроссовок</title>
+    <!-- Подключаем стили -->
+    <link rel="stylesheet" href="Horizon.css">
+    <!-- Подключаем иконки (для примера используем FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Шапка сайта -->
+    <header class="header">
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fa-solid fa-shield-halved"></i> HORIZON
+            </div>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Поиск товаров...">
+                <button><i class="fa-solid fa-search"></i></button>
+            </div>
+
+            <nav class="nav-links">
+                <a href="#">Главная</a>
+                <a href="#">Бренды</a>
+                <a href="#">Скидки</a>
+            </nav>
+
+            <div class="user-actions">
+                <button class="cart-btn">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-count">0</span>
+                </button>
+                <a href="Вход.html"><button class="login-btn">Войти</button></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Главный баннер -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-text">
+                <h1>Оригинальные кроссовки <br>с проверкой</h1>
+                <p>Лучшие цены на Nike, Adidas, Jordan и другие бренды.</p>
+                <button class="btn-primary">Смотреть каталог</button>
+            </div>
+            <div class="hero-image">
+                <!-- Плейсхолдер картинки -->
+                <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Sneakers">
+            </div>
+        </div>
+    </section>
+
+    <!-- Категории -->
+    <section class="categories">
+        <div class="container">
+            <h2>Популярные бренды</h2>
+            <div class="category-grid">
+                <div class="cat-item">Nike</div>
+                <div class="cat-item">Adidas</div>
+                <div class="cat-item">Jordan</div>
+                <div class="cat-item">New Balance</div>
+                <div class="cat-item">Yeezy</div>
+                <div class="cat-item">Asics</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Сетка товаров -->
+    <section class="products">
+        <div class="container">
+            <h2>Рекомендуем вам</h2>
+            <div class="product-grid" id="product-container">
+                <!-- Товары будут добавлены сюда через JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2023 Poizon Clone. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Подключаем скрипт -->
+    <script src="Horizon.js"></script>
+</body>
+</html>S
