@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HORIZON Вход и Регистрация</title>
+    <style>
+        /* --- Основные стили (CSS) --- */
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            width: 100%;
+            background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-position: center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-box {
+            width: 380px;
+            height: 480px;
+            position: relative;
+            margin: 6% auto;
+            background: #fff;
+            padding: 5px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 0 20px 9px #ff61241f;
+        }
+
+        .button-box {
+            width: 220px;
+            margin: 35px auto;
+            position: relative;
+            box-shadow: 0 0 20px 9px #ff61241f;
+            border-radius: 30px;
+        }
+
+        .toggle-btn {
+            padding: 10px 30px;
+            cursor: pointer;
+            background: transparent;
+            border: 0;
+            outline: none;
+            position: relative;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #btn {
+            top: 0;
+            left: 0;
+            position: absolute;
+            width: 110px;
+            height: 100%;
+            background: linear-gradient(to right, #15ff15, #befc2e);
+            border-radius: 30px;
+            transition: .5s;
+        }
+
+        .social-icons {
+            margin: 30px auto;
+            text-align: center;
+        }
+
+        .social-icons img {
+            width: 30px;
+            margin: 0 12px;
+            box-shadow: 0 0 20px 0 #7f7f7f3d;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .input-group {
+            top: 180px;
+            position: absolute;
+            width: 280px;
+            transition: .5s;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px 0;
+            margin: 5px 0;
+            border-left: 0;
+            border-top: 0;
+            border-right: 0;
+            border-bottom: 1px solid #999;
+            outline: none;
+            background: transparent;
+        }
+
+        .submit-btn {
+            width: 85%;
+            padding: 10px 30px;
+            cursor: pointer;
+            display: block;
+            margin: auto;
+            background: linear-gradient(to right, #15ff15, #befc2e);
+            border: 0;
+            outline: none;
+            border-radius: 30px;
+            color: #fff;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .check-box {
+            margin: 30px 10px 30px 0;
+        }
+
+        span {
+            color: #777;
+            font-size: 12px;
+            bottom: 68px;
+            position: absolute;
+        }
+
+        /* Позиции форм по умолчанию */
+        #login {
+            left: 50px;
+        }
+
+        #register {
+            left: 450px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="form-box">
+        <!-- Переключатель Вход / Регистрация -->
+        <div class="button-box">
+            <div id="btn"></div>
+            <button type="button" class="toggle-btn" onclick="login()">Вход</button>
+            <button type="button" class="toggle-btn" onclick="register()">Регистрация</button>
+        </div>
+
+        <!-- Иконки соцсетей (декоративные) -->
+        <div class="social-icons">
+            <!-- Используем заглушки, можно заменить на реальные иконки FontAwesome -->
+            <img src="https://cdn-icons-png.flaticon.com/128/4494/4494490.png" alt="VK">
+            <img src="https://cdn-icons-png.flaticon.com/128/299/299409.png" alt="Google">
+            <img src="https://cdn-icons-png.flaticon.com/128/3670/3670044.png" alt="Telegram">
+        </div>
+
+        <!-- Подключение Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } 
+        from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+        // 1. Вставьте сюда настройки из консоли Firebase
+        const firebaseConfig = {
+            apiKey: "ВАШ_API_KEY",
+            authDomain: "ВАШ_PROJECT_ID.firebaseapp.com",
+            projectId: "ВАШ_PROJECT_ID",
+            storageBucket: "ВАШ_PROJECT_ID.appspot.com",
+            messagingSenderId: "ВАШ_SENDER_ID",
+            appId: "ВАШ_APP_ID"
+        };
+
+        // 2. Инициализация
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // 3. Функция входа через Google
+        window.loginWithGoogle = () => {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    alert("Успешный вход: " + result.user.email);
+                }).catch((error) => {
+                    alert("Ошибка: " + error.message);
+                });
+        };
+
+        // 4. Функция входа через Почту (пример)
+        window.loginWithEmail = () => {
+            const email = prompt("Введите Email:");
+            const password = prompt("Введите Пароль:");
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("Вход выполнен!");
+                })
+                .catch((error) => {
+                    alert("Ошибка входа");
+                });
+        };
+    </script>
+
+        <!-- Форма Входа -->
+        <form id="login" class="input-group">
+            <input type="text" class="input-field" placeholder="Имя пользователя" required>
+            <input type="password" class="input-field" placeholder="Пароль" required>
+            <input type="checkbox" class="check-box"><span>Запомнить пароль</span>
+            <button type="submit" class="submit-btn">Войти</button>
+        </form>
+
+        <!-- Форма Регистрации -->
+        <form id="register" class="input-group">
+            <input type="text" class="input-field" placeholder="Имя пользователя" required>
+            <input type="email" class="input-field" placeholder="Email адрес" required>
+            <input type="password" class="input-field" placeholder="Пароль" required>
+            <button type="submit" class="submit-btn">Зарегистрироваться</button>
+        </form>
+    </div>
+
+    <script>
+        /* --- Логика переключения (JS) --- */
+        var x = document.getElementById("login");
+        var y = document.getElementById("register");
+        var z = document.getElementById("btn");
+
+        function register(){
+            // Сдвигаем форму входа влево
+            x.style.left = "-400px";
+            // Сдвигаем форму регистрации в центр
+            y.style.left = "50px";
+            // Сдвигаем цветной фон кнопки (индикатор) вправо
+            z.style.left = "110px";
+        }
+
+        function login(){
+            // Возвращаем форму входа в центр
+            x.style.left = "50px";
+            // Уводим форму регистрации вправо
+            y.style.left = "450px";
+            // Возвращаем цветной фон кнопки влево
+            z.style.left = "0";
+        }
+    </script>
+
+</body>
+</html>
