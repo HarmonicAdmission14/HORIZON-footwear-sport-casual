@@ -1,164 +1,125 @@
-// Данные о товарах (имитация базы данных)
-const productsData = [
-    {
-        id: 1,
-        title: "Nike Air Jordan 1 Retro High OG SP Utility Stash",
-        price: "25 900 ₽",
-        image: "https://wayoff.ru/upload/iblock/9f4/up1z7o0r0ty0kfei62y2bezj6hg592pw.webp"
-    },
-    {
-        id: 2,
-        title: "Adidas Yeezy Boost 350 V2 Mono Ice",
-        price: "27 900 ₽",
-        image: "https://wayoff.ru/upload/iblock/425/2x2n60aevce2plr2jl8ccr7wukymsswy.webp"
-    },
-    {
-        id: 3,
-        title: "New Balance 530 White Carolina Blue",
-        price: "23 900 ₽",
-        image: "https://wayoff.ru/upload/iblock/da2/bucy6lawasdzwozp7hssg85wbi4g2pb0.webp"
-    },
-    {
-        id: 4,
-        title: "Nike Dunk Low Remastered Reverse Panda",
-        price: "25 900 ₽",
-        image: "https://wayoff.ru/upload/iblock/9aa/h3lrmcarkesrb34viqqj11jq9jtas9h5.webp"
-    },
-    {
-        id: 5,
-        title: "Jordan 4 Retro Military Black",
-        price: "51 000 ₽",
-        image: "https://wayoff.ru/upload/iblock/2fd/rpmemm2rk3m2fs8cum5zthrsdo7wfx52.webp"
-    },
-    {
-        id: 6,
-        title: "Nike Air Force 1 '07 WMNS Cut Out Wheat",
-        price: "27 900 ₽",
-        image: "https://wayoff.ru/upload/iblock/861/8r0qbrjcqmg7ulkivvvknm1p5xrgmqxt.webp"
-    },
-    {
-        id: 7,
-        title: "Asics Gel 1130 White Pure Silver Black",
-        price: "25 900 ₽",
-        image: "https://wayoff.ru/upload/iblock/b3a/j1qhp9rf5gvnj0loqhqmndjvw9hgxrkn.webp"
-    },
-    {
-        id: 8,
-        title: "Gel Nimbus 9 Vanilla Black",
-        price: "37 900",
-        image: "https://wayoff.ru/upload/iblock/76e/mj9j1t2bci76ocdz38n281nrdc2jppo4.webp"
-    },
-];
+    // === ДАННЫЕ ТОВАРОВ ===
+    const productsData = [
+        {
+            id: 1,
+            title: "Nike Air Jordan 1 Retro High OG SP Utility Stash",
+            price: "25 900 ₽",
+            image: "https://wayoff.ru/upload/iblock/9f4/up1z7o0r0ty0kfei62y2bezj6hg592pw.webp"
+        },
+        {
+            id: 2,
+            title: "Adidas Yeezy Boost 350 V2 Mono Ice",
+            price: "27 900 ₽",
+            image: "https://wayoff.ru/upload/iblock/425/2x2n60aevce2plr2jl8ccr7wukymsswy.webp"
+        },
+        {
+            id: 3,
+            title: "New Balance 530 White Carolina Blue",
+            price: "23 900 ₽",
+            image: "https://wayoff.ru/upload/iblock/da2/bucy6lawasdzwozp7hssg85wbi4g2pb0.webp"
+        },
+        {
+            id: 4,
+            title: "Nike Dunk Low Remastered Reverse Panda",
+            price: "25 900 ₽",
+            image: "https://wayoff.ru/upload/iblock/9aa/h3lrmcarkesrb34viqqj11jq9jtas9h5.webp"
+        },
+        {
+            id: 5,
+            title: "Jordan 4 Retro Military Black",
+            price: "51 000 ₽",
+            image: "https://wayoff.ru/upload/iblock/2fd/rpmemm2rk3m2fs8cum5zthrsdo7wfx52.webp"
+        },
+        {
+            id: 6,
+            title: "Nike Air Force 1 '07 WMNS Cut Out Wheat",
+            price: "27 900 ₽",
+            image: "https://wayoff.ru/upload/iblock/861/8r0qbrjcqmg7ulkivvvknm1p5xrgmqxt.webp"
+        },
+        {
+            id: 7,
+            title: "Asics Gel 1130 White Pure Silver Black",
+            price: "25 900 ₽",
+            image: "https://wayoff.ru/upload/iblock/b3a/j1qhp9rf5gvnj0loqhqmndjvw9hgxrkn.webp"
+        },
+        {
+            id: 8,
+            title: "Gel Nimbus 9 Vanilla Black",
+            price: "37 900 ₽",
+            image: "https://wayoff.ru/upload/iblock/76e/mj9j1t2bci76ocdz38n281nrdc2jppo4.webp"
+        },
+    ];
 
-// Элементы DOM
-const productContainer = document.getElementById('product-container');
-const cartCountElement = document.querySelector('.cart-count');
-const addToCartButtons = [];
+    // === ЭЛЕМЕНТЫ DOM ===
+    const productContainer = document.getElementById('product-container');
 
-let cartCount = 0;
+    // === ФУНКЦИЯ ОБНОВЛЕНИЯ СЧЁТЧИКА ===
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('horizon_cart')) || [];
+        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCountElement = document.querySelector('.cart-count');
+        if (cartCountElement) {
+            cartCountElement.textContent = count;
+        }
+    }
 
-// Функция отрисовки товаров
-function renderProducts() {
-    productsData.forEach(product => {
-        const card = document.createElement('div');
-        card.classList.add('product-card');
-
-        card.innerHTML = `
-            <img src="${product.image}" alt="${product.title}" class="product-img">
-            <div class="product-info">
-                <h3 class="product-title">${product.title}</h3>
-                <div class="product-price">${product.price}</div>
-                <button class="add-to-cart">В корзину</button>
+    // === ОТРИСОВКА ТОВАРОВ ===
+    function renderProducts() {
+        if (!productContainer) return; // Защита от ошибки, если элемента нет
+        
+        productContainer.innerHTML = productsData.map(product => `
+            <div class="product-card">
+                <img src="${product.image}" alt="${product.title}" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">${product.title}</h3>
+                    <div class="product-price">${product.price}</div>
+                    <!-- Передаём ID товара в функцию -->
+                    <button class="add-to-cart" onclick="addToCart(${product.id}, this)">В корзину</button>
+                </div>
             </div>
-        `;
-
-        productContainer.appendChild(card);
-    });
-
-    // Добавляем обработчики событий после создания элементов
-    const buttons = document.querySelectorAll('.add-to-cart');
-    buttons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            // Предотвращаем всплытие, чтобы не сработал клик по карточке (если будет)
-            e.stopPropagation();
-            addToCart();
-            
-            // Анимация кнопки
-            btn.textContent = "Добавлено!";
-            btn.style.background = "#00C985";
-            btn.style.color = "#fff";
-            setTimeout(() => {
-                btn.textContent = "В корзину";
-                btn.style.background = "#f0f0f0";
-                btn.style.color = "#333";
-            }, 1000);
-        });
-    });
-}
-
-// Функция добавления в корзину
-// === ЗАМЕНИТЕ СТАРУЮ ФУНКЦИЮ addToCart НА ЭТУ ===
-
-function addToCart(productId) {
-    // Находим товар по ID
-    const product = productsData.find(p => p.id === productId);
-    if (!product) return;
-
-    // Загружаем текущую корзину
-    let cart = JSON.parse(localStorage.getItem('horizon_cart')) || [];
-
-    // Проверяем, есть ли товар уже в корзине
-    const existingItem = cart.find(item => item.id === productId);
-
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        // Добавляем новый товар
-        cart.push({
-            id: product.id,
-            title: product.title,
-            price: product.price,
-            image: product.image,
-            quantity: 1
-        });
+        `).join('');
+        
+        // Обновляем счётчик после отрисовки
+        updateCartCount();
     }
 
-    // Сохраняем в localStorage
-    localStorage.setItem('horizon_cart', JSON.stringify(cart));
+    // === ДОБАВЛЕНИЕ В КОРЗИНУ ===
+    function addToCart(productId, btnElement) {
+        const product = productsData.find(p => p.id === productId);
+        if (!product) return;
 
-    // Обновляем счётчик
-    updateCartCount();
-    
-    // Анимация кнопки (ваша старая логика)
-    const btn = event.target;
-    btn.textContent = "Добавлено!";
-    btn.style.background = "#00C985";
-    btn.style.color = "#fff";
-    setTimeout(() => {
-        btn.textContent = "В корзину";
-        btn.style.background = "#f0f0f0";
-        btn.style.color = "#333";
-    }, 1000);
-}
-    
-    // Анимация иконки корзины
-    const cartBtn = document.querySelector('.cart-btn');
-    cartBtn.style.transform = "scale(1.2)";
-    setTimeout(() => {
-        cartBtn.style.transform = "scale(1)";
-    }, 200);
-}
-// Функция обновления счётчика корзины
-function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem('horizon_cart')) || [];
-    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const cartCountElement = document.querySelector('.cart-count');
-    if (cartCountElement) {
-        cartCountElement.textContent = count;
+        let cart = JSON.parse(localStorage.getItem('horizon_cart')) || [];
+        const existingItem = cart.find(item => item.id === productId);
+
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                id: product.id,
+                title: product.title,
+                price: product.price,
+                image: product.image,
+                quantity: 1
+            });
+        }
+
+        localStorage.setItem('horizon_cart', JSON.stringify(cart));
+        updateCartCount();
+        
+        // Анимация кнопки
+        const originalText = btnElement.textContent;
+        btnElement.textContent = "Добавлено!";
+        btnElement.style.background = "#00C985";
+        btnElement.style.color = "#fff";
+        
+        setTimeout(() => {
+            btnElement.textContent = originalText;
+            btnElement.style.background = "";
+            btnElement.style.color = "";
+        }, 1000);
     }
-}
 
-// Инициализация
-document.addEventListener('DOMContentLoaded', () => {
-    renderProducts();
-});
+    // === ЗАПУСК ===
+    document.addEventListener('DOMContentLoaded', () => {
+        renderProducts();
+    });
