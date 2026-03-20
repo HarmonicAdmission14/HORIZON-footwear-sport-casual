@@ -8,6 +8,43 @@
     <link rel="stylesheet" href="HORIZON.css">
     <!-- Подключаем иконки (для примера используем FontAwesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Делаем ссылку похожей на кнопку */
+a.cart-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    text-decoration: none; /* Убираем подчеркивание ссылки */
+    position: relative;
+    padding: 8px;
+    transition: transform 0.2s;
+}
+
+a.cart-btn:hover {
+    transform: scale(1.1);
+    color: #00C985;
+}
+
+/* Счетчик товаров */
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background: #00C985;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+    min-width: 18px;
+    text-align: center;
+}
+    </style>
 </head>
 <body>
 
