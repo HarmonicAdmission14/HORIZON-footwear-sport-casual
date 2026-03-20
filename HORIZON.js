@@ -4,13 +4,25 @@
             id: 1,
             title: "Nike Air Jordan 1 Retro High OG SP Utility Stash",
             price: "25 900 ₽",
-            image: "https://wayoff.ru/upload/iblock/9f4/up1z7o0r0ty0kfei62y2bezj6hg592pw.webp"
+            images: [
+                "https://wayoff.ru/upload/iblock/9f4/up1z7o0r0ty0kfei62y2bezj6hg592pw.webp"
+                "https://wayoff.ru/upload/iblock/610/ytc90agckhi2vea5c5ivntszcmclnnlo.webp"
+                "https://wayoff.ru/upload/iblock/bf6/t9r8v8a299asate9krnmrqivgjrepwl1.webp"
+                "https://wayoff.ru/upload/iblock/5f3/1y87nojwbcfql4ny1jqy9nsmrnokr19j.webp"
+                "https://wayoff.ru/upload/iblock/010/5f7ci77fvbr0wdp3z5otc7mhl5okcpab.webp"
+                ]
         },
         {
             id: 2,
             title: "Adidas Yeezy Boost 350 V2 Mono Ice",
             price: "27 900 ₽",
-            image: "https://wayoff.ru/upload/iblock/425/2x2n60aevce2plr2jl8ccr7wukymsswy.webp"
+            images: [
+                "https://wayoff.ru/upload/iblock/9ff/magd26hyaoti14vz4l6s3t5la3iz3w5y.webp"
+                "https://wayoff.ru/upload/iblock/180/z3xk0rwjwa8n6wvregdhfee2j2hn8e4f.webp"
+                "https://wayoff.ru/upload/iblock/054/kbg9hgq100qxtm6c6kucf6wtr0y3s7hl.webp"
+                "https://wayoff.ru/upload/iblock/f3c/mqfzfy536y3yfnnn096761hwqah3u2ka.webp"
+                "https://wayoff.ru/upload/iblock/55a/x8audmp3zen2jgkjo1r53tob35xyiqwq.webp"
+                ]
         },
         {
             id: 3,
