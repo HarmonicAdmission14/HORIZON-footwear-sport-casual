@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HORIZON - Магазин кроссовок</title>
     <!-- Подключаем стили -->
-    <link rel="stylesheet" href="HORIZON.css">
+    <link rel="stylesheet" href="HORIZON.css?v=1.1">
     <!-- Подключаем иконки (для примера используем FontAwesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -127,6 +127,9 @@ a.cart-btn:hover {
     </footer>
 
     <!-- Подключаем скрипт -->
-    <script src="HORIZON.js"></script>
+    <script src="HORIZON.js?v=1.1"></script>
+<script>
+    document.write('<link rel="stylesheet" href="Horizon.css?v=' + Date.now() + '">');
+</script>
 </body>
 </html>S
