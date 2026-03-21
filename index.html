@@ -4,51 +4,399 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HORIZON - Магазин кроссовок</title>
-    <!-- Подключаем стили -->
-    <link rel="stylesheet" href="HORIZON.css?v=1.1">
-    <!-- Подключаем иконки (для примера используем FontAwesome) -->
+    <link rel="stylesheet" href="Horizon.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Делаем ссылку похожей на кнопку */
-a.cart-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: #333;
-    text-decoration: none; /* Убираем подчеркивание ссылки */
-    position: relative;
-    padding: 8px;
-    transition: transform 0.2s;
-}
+        /* === БАЗОВЫЕ СТИЛИ === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-a.cart-btn:hover {
-    transform: scale(1.1);
-    color: #00C985;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f4f4;
+        }
 
-/* Счетчик товаров */
-.cart-count {
-    position: absolute;
-    top: -5px;
-    right: -8px;
-    background: #00C985;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 2px 6px;
-    border-radius: 50%;
-    min-width: 18px;
-    text-align: center;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* === ШАПКА === */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: #00C985;
+        }
+
+        .search-bar {
+            display: flex;
+            flex: 1;
+            max-width: 400px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .search-bar input {
+            flex: 1;
+            border: none;
+            padding: 10px 15px;
+            background: transparent;
+            outline: none;
+        }
+
+        .search-bar button {
+            background: #00C985;
+            border: none;
+            padding: 10px 15px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #00C985;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cart-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+            text-decoration: none;
+            position: relative;
+            padding: 8px;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: #00C985;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 50%;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .login-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* === ГЕРОЙ-СЕКЦИЯ === */
+        .hero {
+            background: linear-gradient(135deg, #00C985, #00b377);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+        }
+
+        .hero .container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero-image {
+            flex: 1;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #00C985;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* === КАТЕГОРИИ === */
+        .categories {
+            padding: 40px 0;
+        }
+
+        .categories h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .cat-item {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* === ТОВАРЫ === */
+        .products {
+            padding: 40px 0;
+        }
+
+        .products h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* === КАРТОЧКА ТОВАРА С ГАЛЕРЕЕЙ === */
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Галерея */
+        .product-gallery {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: #f8f8f8;
+        }
+
+        .product-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 20px;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            z-index: 2;
+        }
+
+        .gallery-btn:hover {
+            background: #00C985;
+            color: white;
+        }
+
+        .gallery-btn.prev {
+            left: 10px;
+        }
+
+        .gallery-btn.next {
+            right: 10px;
+        }
+
+        .gallery-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: #00C985;
+            width: 20px;
+            border-radius: 10px;
+        }
+
+        /* Инфо о товаре */
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            height: 44px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00C985;
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 12px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-to-cart:hover {
+            background: #00C985;
+            color: white;
+        }
+
+        /* === ПОДВАЛ === */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+
+            .search-bar {
+                width: 100%;
+                max-width: none;
+            }
+
+            .hero .container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .product-gallery {
+                height: 250px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Шапка сайта -->
+    <!-- Шапка -->
     <header class="header">
         <div class="container header-content">
             <div class="logo">
@@ -61,25 +409,22 @@ a.cart-btn:hover {
             </div>
 
             <nav class="nav-links">
-                <a href="#">Главная</a>
+                <a href="index.html">Главная</a>
                 <a href="#">Бренды</a>
                 <a href="#">Скидки</a>
             </nav>
 
             <div class="user-actions">
-    <!-- Ссылка на корзину -->
-    <a href="cart.html" class="cart-btn">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span class="cart-count">0</span>
-    </a>
-    
-    <!-- Кнопка входа (остается без изменений) -->
-    <a href="ENTRANSE.html"><button class="login-btn">Войти</button></a>
-</div>
+                <a href="cart.html" class="cart-btn">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="login.html" class="login-btn">Войти</a>
+            </div>
         </div>
     </header>
 
-    <!-- Главный баннер -->
+    <!-- Герой -->
     <section class="hero">
         <div class="container">
             <div class="hero-text">
@@ -88,7 +433,6 @@ a.cart-btn:hover {
                 <button class="btn-primary">Смотреть каталог</button>
             </div>
             <div class="hero-image">
-                <!-- Плейсхолдер картинки -->
                 <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Sneakers">
             </div>
         </div>
@@ -109,12 +453,12 @@ a.cart-btn:hover {
         </div>
     </section>
 
-    <!-- Сетка товаров -->
+    <!-- Товары -->
     <section class="products">
         <div class="container">
             <h2>Рекомендуем вам</h2>
             <div class="product-grid" id="product-container">
-                <!-- Товары будут добавлены сюда через JS -->
+                <!-- Товары будут добавлены через JS -->
             </div>
         </div>
     </section>
@@ -122,7 +466,7 @@ a.cart-btn:hover {
     <!-- Подвал -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 HORIZON. </p>
+            <p>&copy; 2023 HORIZON. Все права защищены.</p>
         </div>
     </footer>
 
