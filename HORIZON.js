@@ -28,37 +28,66 @@
             id: 3,
             title: "New Balance 530 White Carolina Blue",
             price: "23 900 ₽",
-            image: "https://wayoff.ru/upload/iblock/da2/bucy6lawasdzwozp7hssg85wbi4g2pb0.webp"
+            images: [
+                "https://wayoff.ru/upload/iblock/da2/bucy6lawasdzwozp7hssg85wbi4g2pb0.webp"
+                "https://wayoff.ru/upload/iblock/b28/uthnrs6oa1mlge5bu0qwv7vnrw8h3gjn.webp"
+                "https://wayoff.ru/upload/iblock/895/10gf1oqb6ls4i0cm05qq62062hwwwld3.webp"
+                ]
         },
         {
             id: 4,
             title: "Nike Dunk Low Remastered Reverse Panda",
             price: "25 900 ₽",
-            image: "https://wayoff.ru/upload/iblock/9aa/h3lrmcarkesrb34viqqj11jq9jtas9h5.webp"
+            images: [
+                "https://wayoff.ru/upload/iblock/9aa/h3lrmcarkesrb34viqqj11jq9jtas9h5.webp"
+                "https://wayoff.ru/upload/iblock/acc/k6blujffgeawf7hdayahplv0odio8p5a.webp"
+                "https://wayoff.ru/upload/iblock/eac/u0ks6ot1a1wn2vzckom3k09nl12s6496.webp"
+                "https://wayoff.ru/upload/iblock/098/c0ld6bnt3ejs2k1nexoafsytul5q8v2y.webp"
+                "https://wayoff.ru/upload/iblock/cb2/7014ld467nclpfajjr2vxnlr1c2gsh5r.webp"
+                 ]
+            
         },
         {
             id: 5,
             title: "Jordan 4 Retro Military Black",
-            price: "51 000 ₽",
-            image: "https://wayoff.ru/upload/iblock/2fd/rpmemm2rk3m2fs8cum5zthrsdo7wfx52.webp"
+            price: "51 900 ₽",
+            images: [
+                "https://wayoff.ru/upload/iblock/2fd/rpmemm2rk3m2fs8cum5zthrsdo7wfx52.webp"
+                "https://wayoff.ru/upload/iblock/248/icq201zzz5z9df0hed30it40cdr196j6.webp"
+                "https://wayoff.ru/upload/iblock/436/jo42f83jivhlxbt51rpqh3s2776z9lzn.webp"
+                ]
+            
         },
         {
             id: 6,
             title: "Nike Air Force 1 '07 WMNS Cut Out Wheat",
             price: "27 900 ₽",
-            image: "https://wayoff.ru/upload/iblock/861/8r0qbrjcqmg7ulkivvvknm1p5xrgmqxt.webp"
+            images: [
+                "https://wayoff.ru/upload/iblock/861/8r0qbrjcqmg7ulkivvvknm1p5xrgmqxt.webp"
+                "https://wayoff.ru/upload/iblock/f7a/gmwrzy71lguhk8fmcx06ml63p42643zq.webp"
+                "https://wayoff.ru/upload/iblock/ea1/kkwb4afsd6vfvzkf2nur4y3j86f23juj.webp"
+                "https://wayoff.ru/upload/iblock/c08/xzqrl2emfta1otw0xvgfqbi4g434xk1h.webp"
+               ]
         },
         {
             id: 7,
             title: "Asics Gel 1130 White Pure Silver Black",
             price: "25 900 ₽",
-            image: "https://wayoff.ru/upload/iblock/b3a/j1qhp9rf5gvnj0loqhqmndjvw9hgxrkn.webp"
+            images: [
+                "https://wayoff.ru/upload/iblock/b3a/j1qhp9rf5gvnj0loqhqmndjvw9hgxrkn.webp"
+                "https://wayoff.ru/upload/iblock/7a5/0ndr5xu5qwa57ooi71v8ve4hsdipow78.webp"
+                "https://wayoff.ru/upload/iblock/355/ql4k0vcvvao2sbag217ilgk8hs84el63.webp"
+               ]
         },
         {
             id: 8,
             title: "Gel Nimbus 9 Vanilla Black",
             price: "37 900 ₽",
-            image: "https://wayoff.ru/upload/iblock/76e/mj9j1t2bci76ocdz38n281nrdc2jppo4.webp"
+            images: [
+                "https://wayoff.ru/upload/iblock/76e/mj9j1t2bci76ocdz38n281nrdc2jppo4.webp"
+                "https://wayoff.ru/upload/iblock/54a/j1t3lqnkeflbfb4s6y5rvv9cz1x9so7i.webp"
+                "https://wayoff.ru/upload/iblock/85e/8q24lwn00s4tvkha6xnvkprb93v5s51y.webp"
+            ]
         },
     ];
 
@@ -75,7 +104,7 @@
         }
     }
 
-    function renderProducts() {
+    ffunction renderProducts() {
     if (!productContainer) return;
     
     productContainer.innerHTML = productsData.map((product, index) => `
@@ -113,8 +142,19 @@
             card.dataset.currentImage = '0';
         }
     });
+    
+    updateCartCount();
+}
+    
+    // Сохраняем текущий индекс для каждой карточки
+    productsData.forEach((product, index) => {
+        const card = document.querySelector(`[data-product-id="${product.id}"]`);
+        if (card) {
+            card.dataset.currentImage = '0';
+        }
+    });
 
-        // Переключение изображений в галерее
+ // Переключение изображений в галерее
 function changeImage(productIndex, direction) {
     const card = document.querySelector(`[data-product-id="${productsData[productIndex].id}"]`);
     const currentImage = parseInt(card.dataset.currentImage);
@@ -140,6 +180,26 @@ function changeImage(productIndex, direction) {
     
     // Обновление точек
     updateDots(productIndex, newIndex);
+}
+
+// Переход к конкретному изображению по точке
+function goToImage(productIndex, imageIndex) {
+    const card = document.querySelector(`[data-product-id="${productsData[productIndex].id}"]`);
+    const currentImage = parseInt(card.dataset.currentImage);
+    
+    if (currentImage !== imageIndex) {
+        changeImage(productIndex, imageIndex > currentImage ? 1 : -1);
+    }
+}
+
+// Обновление индикаторов (точек)
+function updateDots(productIndex, activeIndex) {
+    const dotsContainer = document.getElementById(`dots-${productIndex}`);
+    const dots = dotsContainer.querySelectorAll('.dot');
+    
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === activeIndex);
+    });
 }
 
 // Переход к конкретному изображению по точке
