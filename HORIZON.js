@@ -91,177 +91,191 @@
         },
     ];
 
-    // === ЭЛЕМЕНТЫ DOM ===
-    const productContainer = document.getElementById('product-container');
+    // === ХРАНИЛИЩЕ ДЛЯ ТЕКУЩИХ ИНДЕКСОВ КАЖДОГО ТОВАРА ===
+        const currentImageIndex = {};
 
-    // === ФУНКЦИЯ ОБНОВЛЕНИЯ СЧЁТЧИКА ===
-    function updateCartCount() {
-        const cart = JSON.parse(localStorage.getItem('horizon_cart')) || [];
-        const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+        // === ЭЛЕМЕНТЫ DOM ===
+        const productContainer = document.getElementById('product-container');
         const cartCountElement = document.querySelector('.cart-count');
-        if (cartCountElement) {
-            cartCountElement.textContent = count;
+
+        // === ОБНОВЛЕНИЕ СЧЁТЧИКА КОРЗИНЫ ===
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('horizon_cart')) || [];
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (cartCountElement) {
+                cartCountElement.textContent = count;
+            }
         }
-    }
 
-    ffunction renderProducts() {
-    if (!productContainer) return;
-    
-    productContainer.innerHTML = productsData.map((product, index) => `
-        <div class="product-card" data-product-id="${product.id}">
-            <!-- Галерея изображений -->
-            <div class="product-gallery">
-                <button class="gallery-btn prev" onclick="changeImage(${index}, -1)">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </button>
-                <img src="${product.images[0]}" alt="${product.title}" class="product-img" id="img-${index}">
-                <button class="gallery-btn next" onclick="changeImage(${index}, 1)">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </button>
-                <div class="gallery-dots" id="dots-${index}">
-                    ${product.images.map((_, imgIndex) => 
-                        `<span class="dot ${imgIndex === 0 ? 'active' : ''}" onclick="goToImage(${index}, ${imgIndex})"></span>`
-                    ).join('')}
-                </div>
-            </div>
-            
-            <div class="product-info">
-                <h3 class="product-title">${product.title}</h3>
-                <div class="product-price">${product.price}</div>
-                <button class="add-to-cart" onclick="addToCart(${product.id}, this)">
-                    <i class="fa-solid fa-cart-plus"></i> В корзину
-                </button>
-            </div>
-        </div>
-    `).join('');
-    
-    // Сохраняем текущий индекс для каждой карточки
-    productsData.forEach((product, index) => {
-        const card = document.querySelector(`[data-product-id="${product.id}"]`);
-        if (card) {
-            card.dataset.currentImage = '0';
+        // === ОТРИСОВКА ТОВАРОВ ===
+        function renderProducts() {
+            if (!productContainer) {
+                console.error('Контейнер товаров не найден!');
+                return;
+            }
+
+            productContainer.innerHTML = '';
+
+            productsData.forEach((product, productIndex) => {
+                // Инициализируем индекс для этого товара
+                currentImageIndex[product.id] = 0;
+
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.dataset.productId = product.id;
+
+                card.innerHTML = `
+                    <div class="product-gallery">
+                        <button class="gallery-btn prev" data-product-id="${product.id}" data-direction="-1">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <img src="${product.images[0]}" alt="${product.title}" class="product-img" data-product-id="${product.id}">
+                        <button class="gallery-btn next" data-product-id="${product.id}" data-direction="1">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                        <div class="gallery-dots" data-product-id="${product.id}">
+                            ${product.images.map((_, imgIndex) => 
+                                `<span class="dot ${imgIndex === 0 ? 'active' : ''}" data-img-index="${imgIndex}"></span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${product.title}</h3>
+                        <div class="product-price">${product.price}</div>
+                        <button class="add-to-cart" data-product-id="${product.id}">
+                            <i class="fa-solid fa-cart-plus"></i> В корзину
+                        </button>
+                    </div>
+                `;
+
+                productContainer.appendChild(card);
+            });
+
+            // Добавляем обработчики событий
+            setupGalleryListeners();
+            setupCartListeners();
+            updateCartCount();
         }
-    });
-    
-    updateCartCount();
-}
-    
-    // Сохраняем текущий индекс для каждой карточки
-    productsData.forEach((product, index) => {
-        const card = document.querySelector(`[data-product-id="${product.id}"]`);
-        if (card) {
-            card.dataset.currentImage = '0';
-        }
-    });
 
- // Переключение изображений в галерее
-function changeImage(productIndex, direction) {
-    const card = document.querySelector(`[data-product-id="${productsData[productIndex].id}"]`);
-    const currentImage = parseInt(card.dataset.currentImage);
-    const images = productsData[productIndex].images;
-    
-    let newIndex = currentImage + direction;
-    
-    // Зацикливание галереи
-    if (newIndex < 0) newIndex = images.length - 1;
-    if (newIndex >= images.length) newIndex = 0;
-    
-    // Обновление изображения
-    const imgElement = document.getElementById(`img-${productIndex}`);
-    imgElement.style.opacity = '0';
-    
-    setTimeout(() => {
-        imgElement.src = images[newIndex];
-        imgElement.style.opacity = '1';
-    }, 150);
-    
-    // Обновление индекса
-    card.dataset.currentImage = newIndex;
-    
-    // Обновление точек
-    updateDots(productIndex, newIndex);
-}
+        // === НАСТРОЙКА ОБРАБОТЧИКОВ ГАЛЕРЕИ ===
+        function setupGalleryListeners() {
+            // Кнопки влево/вправо
+            document.querySelectorAll('.gallery-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.productId);
+                    const direction = parseInt(this.dataset.direction);
+                    changeImage(productId, direction);
+                });
+            });
 
-// Переход к конкретному изображению по точке
-function goToImage(productIndex, imageIndex) {
-    const card = document.querySelector(`[data-product-id="${productsData[productIndex].id}"]`);
-    const currentImage = parseInt(card.dataset.currentImage);
-    
-    if (currentImage !== imageIndex) {
-        changeImage(productIndex, imageIndex > currentImage ? 1 : -1);
-    }
-}
-
-// Обновление индикаторов (точек)
-function updateDots(productIndex, activeIndex) {
-    const dotsContainer = document.getElementById(`dots-${productIndex}`);
-    const dots = dotsContainer.querySelectorAll('.dot');
-    
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === activeIndex);
-    });
-}
-
-// Переход к конкретному изображению по точке
-function goToImage(productIndex, imageIndex) {
-    const card = document.querySelector(`[data-product-id="${productsData[productIndex].id}"]`);
-    const currentImage = parseInt(card.dataset.currentImage);
-    
-    if (currentImage !== imageIndex) {
-        changeImage(productIndex, imageIndex > currentImage ? 1 : -1);
-    }
-}
-
-// Обновление индикаторов (точек)
-function updateDots(productIndex, activeIndex) {
-    const dotsContainer = document.getElementById(`dots-${productIndex}`);
-    const dots = dotsContainer.querySelectorAll('.dot');
-    
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === activeIndex);
-    });
-}
-        
-        updateCartCount();
-}
-
-    // === ДОБАВЛЕНИЕ В КОРЗИНУ ===
-    function addToCart(productId, btnElement) {
-        const product = productsData.find(p => p.id === productId);
-        if (!product) return;
-
-        let cart = JSON.parse(localStorage.getItem('horizon_cart')) || [];
-        const existingItem = cart.find(item => item.id === productId);
-
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cart.push({
-                id: product.id,
-                title: product.title,
-                price: product.price,
-                image: product.image,
-                quantity: 1
+            // Точки-индикаторы
+            document.querySelectorAll('.dot').forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const productId = parseInt(this.parentElement.dataset.productId);
+                    const imgIndex = parseInt(this.dataset.imgIndex);
+                    goToImage(productId, imgIndex);
+                });
             });
         }
 
-        localStorage.setItem('horizon_cart', JSON.stringify(cart));
-        updateCartCount();
-        
-        // Анимация кнопки
-        const originalText = btnElement.textContent;
-        btnElement.textContent = "Добавлено!";
-        btnElement.style.background = "#00C985";
-        btnElement.style.color = "#fff";
-        
-        setTimeout(() => {
-            btnElement.textContent = originalText;
-            btnElement.style.background = "";
-            btnElement.style.color = "";
-        }, 1000);
-    }
+        // === НАСТРОЙКА ОБРАБОТЧИКОВ КОРЗИНЫ ===
+        function setupCartListeners() {
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = parseInt(this.dataset.productId);
+                    addToCart(productId, this);
+                });
+            });
+        }
 
-    // === ЗАПУСК ===
-    document.addEventListener('DOMContentLoaded', () => {
-        renderProducts();
-    });
+        // === ПЕРЕКЛЮЧЕНИЕ ИЗОБРАЖЕНИЙ ===
+        function changeImage(productId, direction) {
+            const product = productsData.find(p => p.id === productId);
+            if (!product) return;
+
+            let currentIndex = currentImageIndex[productId] || 0;
+            let newIndex = currentIndex + direction;
+
+            // Зацикливание
+            if (newIndex < 0) newIndex = product.images.length - 1;
+            if (newIndex >= product.images.length) newIndex = 0;
+
+            // Обновляем индекс
+            currentImageIndex[productId] = newIndex;
+
+            // Находим изображение и обновляем
+            const imgElement = document.querySelector(`img.product-img[data-product-id="${productId}"]`);
+            if (imgElement) {
+                imgElement.style.opacity = '0.5';
+                setTimeout(() => {
+                    imgElement.src = product.images[newIndex];
+                    imgElement.style.opacity = '1';
+                }, 150);
+            }
+
+            // Обновляем точки
+            updateDots(productId, newIndex);
+        }
+
+        // === ПЕРЕХОД К КОНКРЕТНОМУ ИЗОБРАЖЕНИЮ ===
+        function goToImage(productId, imgIndex) {
+            const product = productsData.find(p => p.id === productId);
+            if (!product) return;
+
+            const currentIndex = currentImageIndex[productId] || 0;
+            if (currentIndex !== imgIndex) {
+                const direction = imgIndex > currentIndex ? 1 : -1;
+                changeImage(productId, direction);
+            }
+        }
+
+        // === ОБНОВЛЕНИЕ ТОЧЕК-ИНДИКАТОРОВ ===
+        function updateDots(productId, activeIndex) {
+            const dotsContainer = document.querySelector(`.gallery-dots[data-product-id="${productId}"]`);
+            if (!dotsContainer) return;
+
+            dotsContainer.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === activeIndex);
+            });
+        }
+
+        // === ДОБАВЛЕНИЕ В КОРЗИНУ ===
+        function addToCart(productId, btnElement) {
+            const product = productsData.find(p => p.id === productId);
+            if (!product) return;
+
+            let cart = JSON.parse(localStorage.getItem('horizon_cart')) || [];
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    images: product.images,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('horizon_cart', JSON.stringify(cart));
+            updateCartCount();
+
+            // Анимация кнопки
+            const originalText = btnElement.innerHTML;
+            btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Добавлено!';
+            btnElement.style.background = '#00C985';
+            btnElement.style.color = '#fff';
+
+            setTimeout(() => {
+                btnElement.innerHTML = originalText;
+                btnElement.style.background = '';
+                btnElement.style.color = '';
+            }, 1000);
+        }
+
+        // === ЗАПУСК ===
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+        });
